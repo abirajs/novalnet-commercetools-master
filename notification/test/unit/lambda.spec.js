@@ -1,0 +1,154 @@
+import sinon from 'sinon'
+import { expect, assert } from 'chai'
+import VError from 'verror'
+import { handler } from '../../index.lambda.js'
+import notificationHandler from '../../src/handler/notification/notification.handler.js'
+import { getLogger } from '../../src/utils/logger.js'
+import config from '../../src/config/config.js'
+import utils from '../../src/utils/commons.js'
+import { buildMockErrorFromConcurrentModificationException } from '../test-utils.js'
+
+const logger = getLogger()
+
+describe('Lambda handler', () => {
+  const sandbox = sinon.createSandbox()
+  const event = {
+    live: 'false',
+    notificationItems: [
+      {
+        NotificationRequestItem: {
+          amount: {
+            currency: 'EUR',
+            value: 10100,
+          },
+          additionalData: {
+            key: 'value',
+            key2: 'value2',
+            'metadata.ctProjectKey': 'testKey',
+          },
+          eventCode: 'AUTHORISATION',
+          eventDate: '2019-01-30T18:16:22+01:00',
+          merchantAccountCode: 'YOUR_MERCHANT_ACCOUNT',
+          merchantReference: '8313842560770001',
+          operations: ['CANCEL', 'CAPTURE', 'REFUND'],
+          paymentMethod: 'visa',
+          pspReference: 'test_AUTHORISATION_1',
+          success: 'true',
+        },
+      },
+    ],
+  }
+  beforeEach(() => {
+    const configGetCtpConfigSpy = sandbox
+      .stub(config, 'getCtpConfig')
+      .callsFake(() => ({}))
+    config.getCtpConfig = configGetCtpConfigSpy
+
+    const configGetnovalnetConfigSpy = sandbox
+      .stub(config, 'getnovalnetConfig')
+      .callsFake(() => ({}))
+    config.getnovalnetConfig = configGetnovalnetConfigSpy
+  })
+  afterEach(() => {
+    notificationHandler.processNotification.restore()
+    sandbox.restore()
+  })
+
+  it('returns correct success response', async () => {
+    sinon.stub(notificationHandler, 'processNotification').returns(undefined)
+
+    const result = await handler(event)
+
+    expect(result).to.eql({ notificationResponse: '[accepted]' })
+  })
+
+  it('throws and logs for concurrent modification exceptions', async () => {
+    const originalChildFn = logger.child
+    try {
+      const logSpy = sinon.spy()
+      logger.error = logSpy
+      logger.child = () => ({
+        error: logSpy,
+      })
+
+      const error = await buildMockErrorFromConcurrentModificationException()
+      const errorWrapper = new VError(error)
+      sinon
+        .stub(notificationHandler, 'processNotification')
+        .throws(errorWrapper)
+
+      try {
+        await handler(event)
+      } catch (e) {
+        expect(e).to.be.equal(errorWrapper)
+      }
+
+      const notificationItem = event.notificationItems.pop()
+      logSpy.calledWith(
+        {
+          notification: utils.getNotificationForTracking(notificationItem),
+          err: errorWrapper,
+        },
+        'Unexpected error when processing event',
+      )
+    } finally {
+      logger.child = originalChildFn
+    }
+  })
+
+  it('logs for unrecoverable and returns "accepted"', async () => {
+    const originalChildFn = logger.child
+    try {
+      const logSpy = sinon.spy()
+      logger.error = logSpy
+      logger.child = () => ({
+        error: logSpy,
+      })
+
+      const error = new Error('some error')
+      sinon.stub(notificationHandler, 'processNotification').throws(error)
+
+      const result = await handler(event)
+      expect(result).to.eql({ notificationResponse: '[accepted]' })
+
+      const notificationItem = event.notificationItems.pop()
+      logSpy.calledWith(
+        {
+          notification: utils.getNotificationForTracking(notificationItem),
+          err: error,
+        },
+        'Unexpected error when processing event',
+      )
+    } finally {
+      logger.child = originalChildFn
+    }
+  })
+
+  it('throws error if no notificationItems were received and logs properly', async () => {
+    const logSpy = sinon.spy()
+    sinon.stub(notificationHandler, 'processNotification').returns(undefined)
+    logger.error = logSpy
+
+    const error = new Error('No notification received.')
+
+    const emptyEvent = {}
+
+    try {
+      await handler(emptyEvent)
+    } catch (e) {
+      expect(e.message).to.be.equal(error.message)
+    }
+
+    assert(
+      logSpy.calledWith(
+        sinon.match({
+          notification: undefined,
+          err: sinon.match
+            .instanceOf(Error)
+            .and(sinon.match.has('message', error.message)),
+        }),
+        `Unexpected error when processing event`,
+      ),
+    )
+  })
+})

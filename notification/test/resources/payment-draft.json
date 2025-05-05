@@ -1,0 +1,35 @@
+{
+  "key": "8313842560770001",
+  "amountPlanned": {
+    "type": "centPrecision",
+    "currencyCode": "EUR",
+    "centAmount": 795,
+    "fractionDigits": 2
+  },
+  "paymentMethodInfo": {
+    "paymentInterface": "ctp-novalnet-integration"
+  },
+  "custom": {
+    "type": {
+      "typeId": "type",
+      "key": "ctp-novalnet-integration-web-components-payment-type"
+    },
+    "fields": {
+      "createSessionRequest": "{ \"amount\": { \"currency\": \"EUR\", \"value\": 795 }, \"reference\": \"YOUR_REFERENCE\", \"channel\": \"Web\", \"returnUrl\": \"https://your-company.com/...\", \"merchantAccount\": \"YOUR_MERCHANT_ACCOUNT\" }",
+      "createSessionResponse": "{ \"amount\": { \"currency\": \"EUR\", \"value\": 795 }, \"merchantAccount\": \"YOUR_MERCHANT_ACCOUNT\" }"
+    }
+  },
+  "transactions": [
+    {
+      "type": "Authorization",
+      "amount": {
+        "type": "centPrecision",
+        "currencyCode": "EUR",
+        "centAmount": 495,
+        "fractionDigits": 2
+      },
+      "interactionId": "test_AUTHORISATION_1",
+      "state": "Pending"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "key": "ctp-novalnet-integration-web-components-payment-type",
+  "name": {
+    "en": "commercetools novalnet integration payment custom type based on web components"
+  },
+  "resourceTypeIds": ["payment"],
+  "fieldDefinitions": [
+    {
+      "name": "languageCode",
+      "label": {
+        "en": "Language code is used to determine the default locale for line item names in the matching cart."
+      },
+      "type": {
+        "name": "String"
+      },
+      "inputHint": "SingleLine",
+      "required": false
+    },
+    {
+      "name": "createSessionRequest",
+      "label": {
+        "en": "createSessionRequest"
+      },
+      "type": {
+        "name": "String"
+      },
+      "inputHint": "MultiLine",
+      "required": false
+    },
+    {
+      "name": "createSessionResponse",
+      "label": {
+        "en": "createSessionResponse"
+      },
+      "type": {
+        "name": "String"
+      },
+      "inputHint": "MultiLine",
+      "required": false
+    }
+  ]
+}

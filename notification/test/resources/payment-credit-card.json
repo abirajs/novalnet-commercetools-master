@@ -1,0 +1,26 @@
+{
+  "key": "YOUR_REFERENCE",
+  "amountPlanned": {
+    "type": "centPrecision",
+    "currencyCode": "EUR",
+    "centAmount": 595,
+    "fractionDigits": 2
+  },
+  "paymentMethodInfo": {
+    "paymentInterface": "ctp-novalnet-integration",
+    "method": "visa"
+  },
+  "custom": {
+    "type": {
+      "typeId": "type",
+      "key": "ctp-novalnet-integration-web-components-payment-type"
+    },
+    "fields": {
+      "createSessionRequest": "{ \"amount\": { \"currency\": \"EUR\", \"value\": 1000 }, \"reference\": \"YOUR_REFERENCE\", \"channel\": \"Web\", \"returnUrl\": \"https://your-company.com/...\", \"merchantAccount\": \"YOUR_MERCHANT_ACCOUNT\" }",
+      "createSessionResponse": "{ \"amount\": { \"currency\": \"EUR\", \"value\": 1000 }, \"merchantAccount\": \"YOUR_MERCHANT_ACCOUNT\" }"
+    }
+  },
+  "paymentStatus": {},
+  "transactions": [],
+  "interfaceInteractions": []
+}
