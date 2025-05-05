@@ -23,7 +23,3 @@ deployAs:
             Escaped JSON object, for more details visit 
             https://github.com/commercetools/commercetools-novalnet-integration/blob/master/notification/docs/HowToRun.md#environment-variable
 
-paymentProvider:
-  supportedIntegrationModes:
-    - "storefront"
-    - "admin-order"
