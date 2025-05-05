@@ -1,47 +1,29 @@
-name: "Novalnet Payment Integration"
-description: "Novalnet payment gateway integration for commercetools"
-type: Payment
-
-# Deployment configuration
 deployAs:
-  name: novalnet-payment
-  applicationType: service
-  endpoint: /
-  scripts:
-    postDeploy: npm install && npm run setup-resources
-  configuration:
-    securedConfiguration:
-      - key: novalnet_INTEGRATION_CONFIG
-        description: "Escaped JSON object containing Novalnet configuration"
-        required: true
+  - name: extension
+    applicationType: service
+    endpoint: /
+    scripts:
+      postDeploy: npm install && npm run setup-resources
+    configuration:
+      securedConfiguration:
+        - key: novalnet_INTEGRATION_CONFIG
+          description: >
+            Escaped JSON object, for more details visit 
+            https://github.com/commercetools/commercetools-novalnet-integration/blob/master/extension/docs/HowToRun.md#environment-variable
 
-# Payment provider configuration
+  - name: notification
+    applicationType: service
+    endpoint: /
+    scripts:
+      postDeploy: npm install && npm run setup-resources
+    configuration:
+      securedConfiguration:
+        - key: novalnet_INTEGRATION_CONFIG
+          description: >
+            Escaped JSON object, for more details visit 
+            https://github.com/commercetools/commercetools-novalnet-integration/blob/master/notification/docs/HowToRun.md#environment-variable
+
 paymentProvider:
   supportedIntegrationModes:
     - "storefront"
     - "admin-order"
-  paymentMethods:
-    - creditCard
-    - sepaDirectDebit
-    - paypal
-    - ideal
-    # Add other supported Novalnet payment methods
-  
-  # Required configuration for payment processing
-  requiredConfiguration:
-    - merchantId
-    - projectId
-    - signature
-    - tarifId
-    - paymentAccessKey
-    - webhookTestMode
-    - webhookEmailTo
-
-# Webhook configuration (required for payment status updates)
-webhooks:
-  - eventTypes:
-      - PaymentInteractionAdded
-      - PaymentTransactionAdded
-      - PaymentTransactionStateChanged
-    url: "/webhooks/payment"
-    description: "Novalnet payment status updates"
