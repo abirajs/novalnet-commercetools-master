@@ -1,0 +1,15 @@
+{
+  "key": "ctp-novalnet-integration-payment-extension",
+  "destination": {
+    "type": "HTTP",
+    "url": "${ctpnovalnetIntegrationBaseUrl}"
+  },
+  "triggers": [
+    {
+      "resourceTypeId": "payment",
+      "actions": ["Create", "Update"],
+      "condition": "paymentMethodInfo is defined AND paymentMethodInfo(paymentInterface is defined) AND paymentMethodInfo(paymentInterface=\"ctp-novalnet-integration\")"
+    }
+  ],
+  "timeoutInMs": 10000
+}
