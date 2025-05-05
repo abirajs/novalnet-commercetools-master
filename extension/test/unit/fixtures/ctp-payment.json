@@ -1,0 +1,46 @@
+{
+  "amountPlanned": {
+    "type": "centPrecision",
+    "currencyCode": "EUR",
+    "centAmount": 1000,
+    "fractionDigits": 2
+  },
+  "paymentMethodInfo": {
+    "paymentInterface": "ctp-novalnet-integration"
+  },
+  "custom": {
+    "type": {
+      "typeId": "type",
+      "key": "ctp-novalnet-integration-web-components-payment-type"
+    },
+    "fields": {}
+  },
+  "transactions": [
+    {
+      "id": "6b1d4c68-8e31-4528-9af8-dc09ad653d91",
+      "type": "Authorization",
+      "amount": {
+        "type": "centPrecision",
+        "currencyCode": "EUR",
+        "centAmount": 495,
+        "fractionDigits": 2
+      },
+      "interactionId": "8835513921644842",
+      "state": "Success"
+    }
+  ],
+  "interfaceInteractions": [
+    {
+      "type": {
+        "typeId": "type",
+        "key": "ctp-novalnet-integration-interaction-payment-type"
+      },
+      "fields": {
+        "request": "{ \"merchantAccount\": \"YOUR_MERCHANT_ACCOUNT\", \"amount\": { \"value\": 1000, \"currency\": \"EUR\" }, \"returnUrl\": \"https://your-company.com/checkout?shopperOrder=12xy..\", \"reference\": \"YOUR_REFERENCE\", \"countryCode\": \"NL\" }",
+        "createdAt": "2019-02-28T22:16:04.246Z",
+        "response": "response",
+        "type": "createSession"
+      }
+    }
+  ]
+}

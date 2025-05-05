@@ -1,0 +1,72 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Submit additional payment details</title>
+    <link
+      rel="stylesheet"
+      href="https://checkoutshopper-live.novalnet.com/checkoutshopper/sdk/5.53.2/novalnet.css"
+      integrity="sha384-9EdBqZRrjozkt+Be5ycjHBTi+4DYrafpC1KyPnNyTBfjBIZ5+oMp8BbgvPLGgsE0"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div>
+      <input
+        type="text"
+        id="novalnet-make-payment-response-action-field"
+        placeholder="novalnet action field"
+      /><br />
+      <input
+        type="text"
+        id="novalnet-client-key"
+        placeholder="novalnet client key"
+      /><br />
+      <button type="button" id="redirect-payment-button">
+        Redirect payment
+      </button>
+      <br />
+      <br />
+      <input
+        type="text"
+        id="novalnet-additional-payment-details"
+        placeholder="Additional payment details will be here"
+      /><br />
+    </div>
+    <div id="component-container"></div>
+
+    <script
+      src="https://checkoutshopper-live.novalnet.com/checkoutshopper/sdk/5.53.2/novalnet.js"
+      integrity="sha384-ng3HLoZIlQ3BLgyGyGNiwWSx6LEPIlmxVuGRw72skZFt9mL8OweRjp7vcPzSqxTj"
+      crossorigin="anonymous"
+    ></script>
+    <script type="application/javascript">
+      const configuration = {
+        locale: 'en_US',
+        environment: 'test',
+        clientKey: '',
+        onAdditionalDetails: handleOnAdditionalDetails,
+      }
+
+      const actionFieldElemenet = document.getElementById(
+        'redirect-payment-button',
+      )
+      actionFieldElemenet.addEventListener('click', async () => {
+        const clientKeyElement = document.getElementById('novalnet-client-key')
+        configuration.clientKey = clientKeyElement.value
+        const actionFieldElemenet = document.getElementById(
+          'novalnet-make-payment-response-action-field',
+        )
+        const action = JSON.parse(actionFieldElemenet.value)
+        const checkout = await novalnetCheckout(configuration)
+        checkout.createFromAction(action).mount('#component-container')
+      })
+
+      function handleOnAdditionalDetails(state) {
+        const additionalPaymentDetailsInput = document.getElementById(
+          'novalnet-additional-payment-details',
+        )
+        additionalPaymentDetailsInput.value = JSON.stringify(state.data)
+      }
+    </script>
+  </body>
+</html>

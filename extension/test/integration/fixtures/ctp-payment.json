@@ -1,0 +1,19 @@
+{
+  "amountPlanned": {
+    "currencyCode": "EUR",
+    "centAmount": 1000
+  },
+  "paymentMethodInfo": {
+    "paymentInterface": "ctp-novalnet-integration"
+  },
+  "custom": {
+    "type": {
+      "typeId": "type",
+      "key": "ctp-novalnet-integration-web-components-payment-type"
+    },
+    "fields": {
+      "commercetoolsProjectKey": "YOUR_PROJECT_KEY",
+      "novalnetMerchantAccount": "YOUR_MERCHANT_ACCOUNT"
+    }
+  }
+}

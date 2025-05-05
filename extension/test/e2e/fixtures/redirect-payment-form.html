@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirect payment form</title>
+    <link
+      rel="stylesheet"
+      href="https://checkoutshopper-live.novalnet.com/checkoutshopper/sdk/5.53.2/novalnet.css"
+      integrity="sha384-9EdBqZRrjozkt+Be5ycjHBTi+4DYrafpC1KyPnNyTBfjBIZ5+oMp8BbgvPLGgsE0"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div>
+      <input
+        type="text"
+        id="novalnet-redirect-session-id"
+        placeholder="novalnet session ID"
+      /><br />
+      <input
+        type="text"
+        id="novalnet-redirect-result"
+        placeholder="novalnet redirect result"
+      /><br />
+      <input
+        type="text"
+        id="novalnet-client-key"
+        placeholder="novalnet client key"
+      /><br />
+      <div id="redirect-response"></div>
+      <input type="text" id="novalnet-payment-auth-result" />
+      <button type="button" id="redirect-payment-button">
+        Redirect payment
+      </button>
+      <br />
+    </div>
+    <div id="component-container"></div>
+
+    <script
+      src="https://checkoutshopper-live.novalnet.com/checkoutshopper/sdk/5.53.2/novalnet.js"
+      integrity="sha384-ng3HLoZIlQ3BLgyGyGNiwWSx6LEPIlmxVuGRw72skZFt9mL8OweRjp7vcPzSqxTj"
+      crossorigin="anonymous"
+    ></script>
+    <script type="application/javascript">
+      const configuration = {
+        locale: 'en_US',
+        environment: 'test',
+        clientKey: '', // init when button is clicked
+        session: {
+          id: '', // init when button is clicked
+        },
+        onPaymentCompleted: (result, component) => {
+          document.getElementById('novalnet-payment-auth-result').value =
+            JSON.stringify(result)
+        },
+        onError: (error, component) => {
+          console.error(error.name, error.message, error.stack, component)
+        },
+      }
+
+      // Click the button to do two operations :
+      // 1. Instantiate novalnetCheckout object
+      // 2. Create FormAction
+      const actionFieldElemenet = document.getElementById(
+        'redirect-payment-button',
+      )
+      const sessionIdElement = document.getElementById(
+        'novalnet-redirect-session-id',
+      )
+      const redirectResultElement = document.getElementById(
+        'novalnet-redirect-result',
+      )
+      actionFieldElemenet.addEventListener('click', async () => {
+        const clientKeyElement = document.getElementById('novalnet-client-key')
+        configuration.clientKey = clientKeyElement.value
+        configuration.session.id = sessionIdElement.value
+
+        const checkout = await novalnetCheckout(configuration)
+        // Submit the redirectResult value you extracted from the returnUrl.
+        const details = {
+          details: { redirectResult: redirectResultElement.value },
+        }
+        checkout.submitDetails(details)
+      })
+    </script>
+  </body>
+</html>
