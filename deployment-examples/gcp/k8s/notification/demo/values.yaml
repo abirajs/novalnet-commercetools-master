@@ -1,0 +1,6 @@
+ingress:
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: 'ctp-novalnet-integration-demo-notification-global-ip'
+    ingress.gcp.kubernetes.io/pre-shared-cert: 'ct-app'
+  hosts:
+    - 'novalnet-payment-demo-notification.ct-app.com'
