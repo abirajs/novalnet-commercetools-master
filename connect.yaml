@@ -6,11 +6,8 @@ deployAs:
       postDeploy: npm install && npm run setup-resources
     configuration:
       securedConfiguration:
-        - key: novalnet_INTEGRATION_CONFIG
-          description: >
-            Escaped JSON object, for more details visit 
-            https://github.com/commercetools/commercetools-novalnet-integration/blob/master/extension/docs/HowToRun.md#environment-variable
-
+        - key: public_key
+          description: Escaped JSON object, for more details visit (https://github.com/commercetools/commercetools-novalnet-integration/blob/master/extension/docs/HowToRun.md#environment-variable)
   - name: notification
     applicationType: service
     endpoint: /
@@ -18,8 +15,11 @@ deployAs:
       postDeploy: npm install && npm run setup-resources
     configuration:
       securedConfiguration:
-        - key: novalnet_INTEGRATION_CONFIG
-          description: >
-            Escaped JSON object, for more details visit 
-            https://github.com/commercetools/commercetools-novalnet-integration/blob/master/notification/docs/HowToRun.md#environment-variable
+        - key: private_key
+          description: Escaped JSON object, for more details visit (https://github.com/commercetools/commercetools-novalnet-integration/blob/master/notification/docs/HowToRun.md#environment-variable)
 
+paymentProvider:
+  supportedIntegrationModes:
+    - "storefront"
+    - "admin-order"
+  
